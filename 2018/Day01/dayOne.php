@@ -20,7 +20,7 @@ function returnDoubleValues($array){
         foreach ($array as $value) {
             $frequencySum += (int)$value;
             if (in_array($frequencySum, $seen)){
-                echo $frequencySum;
+                return $frequencySum;
                 break 2;
             }
             $seen[] = $frequencySum;
@@ -35,5 +35,5 @@ $frequencies = filereader("input.txt");
 $result = array_sum($frequencies);
 echo "\nSum: ".$result."<br><br>";
 $result = returnDoubleValues($frequencies);
-echo "\nFirst Sum that occurs a second time:".$result;
+echo "\nFirst Sum that occurs a second time:".$result."\n";
 
