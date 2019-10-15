@@ -49,4 +49,16 @@ function sumup($array){
 
 }
 
+function lvstein($array){
+    foreach ($array as $item) {
+        foreach ($array as $item2) {
+            if (levenshtein($item,$item2) === 1){
+                echo $item." & ".$item2;
+                break 2;
+            }
+        }
+    }
+}
+
 echo sumup(filereader("input.txt"));
+lvstein(filereader("input.txt"));
