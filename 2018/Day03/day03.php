@@ -18,48 +18,67 @@ function inputhandler($RawInput){
     return $returner;
 }
 
-function findOverlapPoint($RawArray){
-    //return a list of x and y coordinates
-    //each pair represents a point that overlaps with any other
-    //Input Variables
-    foreach ($RawArray as $item) {
-        $arrayX[] = $item[1];//Array of all X Values
-        $arrayRangeX[] = $item[3];//Array of all ranges for X
-        $arrayY[] = $item[2];
-        $arrayRangeY[] = $item[4];
+function parseClaims(array $lines) {
+    $claims = [];
+    foreach ($lines as $line) {
+        $parts = explode(' ', str_replace(':', '', $line));
+        $start = array_map('intval', explode(',', $parts[2]));
+        $claim = [
+            'id' => $parts[0],
+            'start' => [$start[0], $start[1]]
+        ];
+        $claim['size'] = array_map('intval', explode('x', $parts[3]));
+        $claim['end'] = [
+            $claim['start'][0] + $claim['size'][0],
+            $claim['start'][1] + $claim['size'][1]
+        ];
+        $claims[] = $claim;
     }
-    print_r($arrayX);
-    //temps
-    $foundX = array();
-    $foundY = array();
-    //Logic
-    $indexWhile = 0;
-    while ($indexWhile < count($arrayX)){
-        for ($innerIndex = 0; $innerIndex<=count($arrayX);$innerIndex+=1){
-            if ($arrayX[$indexWhile] > $arrayX[$innerIndex] and $arrayX[$indexWhile]+$arrayRangeX[$indexWhile] < $arrayX[$innerIndex]+$arrayRangeX[$innerIndex]){
-                if ($arrayY[$indexWhile] > $arrayY[$innerIndex] and $arrayY[$indexWhile]+$arrayRangeY[$indexWhile] < $arrayY[$innerIndex]+$arrayRangeY[$innerIndex]){
-                    $foundX[] = $arrayX[$indexWhile];
-                    $foundY[] = $arrayY[$indexWhile];
-                }
+    return $claims;
+}
+
+function markFabric(array $claims){
+    $fabric = [];
+    $fabricSize = [1000, 1000];
+    for ($x = 0; $x <= $fabricSize[0]; $x++) {
+        for ($y = 0; $y <= $fabricSize[1]; $y++) {
+            $fabric[$x][$y] = 0;
+        }
+    }
+    foreach ($claims as $claim) {
+        for ($x = $claim['start'][0]; $x < $claim['end'][0]; $x++) {
+            for ($y = $claim['start'][1]; $y < $claim['end'][1]; $y++) {
+                $fabric[$x][$y] = $fabric[$x][$y] + 1;
             }
         }
-        $indexWhile+=1;
     }
-    print_r($foundX);
-    print_r($foundY);
-
-
-
-    //prepare Output
-    $returnArray = array();
-    for ($index = 0; $index <= count($foundX); $index += 1 ){
-        $returnArray[] = array($foundX[$index], $foundY[$index]);
-    }
-    return array();
+    return $fabric;
 }
 
-function deleteDoubles($arrayOfAllPoints){
-    return array_unique($arrayOfAllPoints);
+function part1($lines) {
+    $claims = parseClaims($lines );
+    $fabric = markFabric($claims);
+    $multiClaimed=0;
+    array_walk_recursive($fabric, function ($value, $key) use(&$multiClaimed) {
+        if($value > 1 ) $multiClaimed++;
+    });
+    return $multiClaimed;
 }
 
-echo findOverlapPoint(inputhandler(filereader("testInput.txt")));
+function part2($lines) {
+    $claims = parseClaims($lines );
+    $fabric = markFabric($claims);
+    foreach ($claims as $claim) {
+        $tainted = 0;
+        for ($x = $claim['start'][0]; $x < $claim['end'][0]; $x++) {
+            for ($y = $claim['start'][1]; $y < $claim['end'][1]; $y++) {
+                if($fabric[$x][$y]>1) $tainted=1;
+            }
+        }
+        if($tainted==0) return $claim['id'];
+    }
+    return '--ERROR--';
+}
+
+echo part1(filereader("input.txt"));
+echo part2(filereader("input.txt"));
