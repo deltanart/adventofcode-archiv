@@ -11,9 +11,14 @@ function filereader($infile){
     return $array;
 }
 function inputhandler($RawInput){
+    $data = array();
     foreach ($RawInput as $line) {
-        $line = preg_match_all('/(\d+)/',$line,$temp);
-        $returner[] = $temp[0];
+        if(preg_match_all("/\[\d+-\d+-\d+\s\d+:\d+\]/", $line, $key)); //Regex für den Zeitstempel in den [ ] Klammern
+        if(preg_match_all("/(\s\w+\s#\d+\s\w+\s\w+)|\s\w+\s\w+/", $line, $dataentry)); //Regex für alles hinter dem Zeitstempel
+        $data[$key[0][0]] = $dataentry[0][0];
     }
-    return $returner;
+    ksort($data);
+    return $data;
 }
+
+inputhandler(filereader("testInput.txt"));
