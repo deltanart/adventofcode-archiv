@@ -74,26 +74,24 @@ function guardMinCounter($guardarray, $data){
     };
     $sleepingBeauty = 0;
     $sleepingBeautyID = 0;
-    $minute = -1;
+    $minutes = -1;
 
     foreach ($guardarray as $key=> $item) {
         if (count($item)>$sleepingBeauty){
             $sleepingBeauty = count($item);
             $sleepingBeautyID = $key;
             arsort($item);
-            $new = array();
-            $new = $item;
-            print_r($new);
-            array_key_first($new[0]); //Compiler doesn't know this function.. Good n8;
-            print_r($new[0]);
+            $minutes = $item; //Compiler doesn't know this function.. Good n8;
         }
     }
     echo "ID: ".$sleepingBeautyID."\n";
     echo "Summe: ".$sleepingBeauty."\n";
-    echo "Minute: ".$minute."\n";
-    if(preg_match_all("/\d+/", $sleepingBeautyID, $FinalID)); //Regex für den Zeitstempel in den [ ] Klammern
-
-    echo "Finally: ". $FinalID[0][0]*$minute."\n";
+    echo "Minute: ".key($minutes)."\n";
+    if(preg_match_all("/\d+/", $sleepingBeautyID, $FinalID));//Regex für den Zeitstempel in den [ ] Klammern
+    $IntID = (int)($FinalID[0][0]);
+    $minute = key($minutes);
+    $ergebniss = $IntID * $minute;
+    echo "Finally: ". $ergebniss ."\n";
 
 
 }
