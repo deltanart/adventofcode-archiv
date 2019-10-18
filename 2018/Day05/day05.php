@@ -8,14 +8,15 @@
 function filereader($infile){
 $line = file_get_contents($infile);
 $line = trim($line);
+$line = str_split($line, 1);
 return $line;
 }
 
 function isEqual($charOne, $charTwo){
     //checks to chars regardles of upper or lower case if there are identical and returns a bool
-    $charOne = strtolower($charOne);
-    $charTwo = strtolower($charTwo);
-    if ($charOne == $charTwo){
+    $charOnelower = strtolower($charOne);
+    $charTwolower = strtolower($charTwo);
+    if ($charOnelower == $charTwolower and $charOne != $charTwo){
         return TRUE;
     }else{ return FALSE;}
 }
@@ -24,38 +25,29 @@ function part01_1($array)
 {
     $foundCase = TRUE;
     echo count($array) . "\n";
-    $foundCases = 0;
-    foreach ($array as $key => $item) {
-        if (array_key_exists($key, $array)) {
-            if ($key === 0) {
-                continue;
-            }
-            if (!array_key_exists($key - 1, $array)) {
-                continue;
-            }
+    $index = 0;
+    while ($foundCase) {
+        $foundCases = 0;
+        foreach ($array as $key => $item) {
+            if (!array_key_exists($key, $array)) {continue;}
+            if ($key === 0) {continue;}
+            if (!array_key_exists($key - 1, $array)) {continue;}
+
             if (isEqual($array[$key - 1], $array[$key])) {
                 unset($array[$key], $array[$key - 1]);
                 $foundCases += 1;
             }
-            else {
-                if ($foundCases < 1) {
-                    $foundCases = FALSE;
-                }
-                else {
-                    $foundCases = TRUE;
-                }
-            }
         }
-        else {
-            break;
+        if ($foundCases < 1) {
+            $foundCase = FALSE;
+            echo "$index\n";
         }
+        $index += 1;
+        $array = array_values($array);
+
     }
-    $array = array_values($array);
     echo count($array) . "\n";
-    if (!$foundCases) {
-        part01($array);
-    }
-    part01($array);
+
     return count($array);
 }
 
@@ -100,5 +92,5 @@ function part02($string){
 
 
 
-echo (part02(filereader('input.txt')))."\n";
+echo (part01_1(filereader('input.txt')))."\n";
 
