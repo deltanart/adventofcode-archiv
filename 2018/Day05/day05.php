@@ -8,7 +8,6 @@
 function filereader($infile){
 $line = file_get_contents($infile);
 $line = trim($line);
-$line = str_split($line, 1);
 return $line;
 }
 
@@ -23,6 +22,8 @@ function isEqual($charOne, $charTwo){
 
 function part01_1($array)
 {
+    $array = str_split($array, 1);
+
     $foundCase = TRUE;
     echo count($array) . "\n";
     $index = 0;
@@ -52,6 +53,7 @@ function part01_1($array)
 }
 
 function part01($string){
+
     $prestring = "";
     $returnstring = $string;
     for ($i = 0 ;$i<26; $i+=1 ){
@@ -69,6 +71,7 @@ function part01($string){
     return strlen($returnstring);
 }
 function part02($string){
+
     $returnstring = $string;
     $prestring = "";
     for ($i = 0 ;$i<26; $i+=1 ){
