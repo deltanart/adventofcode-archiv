@@ -7,7 +7,6 @@ $array = array();
 $handle = fopen($infile, "r") or die ("Unable to open the requested File");
 $line = fgets($handle);
 fclose($handle);
-$line = str_split($line,1); //line is now an array of each character
 return $line;
 }
 
@@ -20,35 +19,69 @@ function isEqual($charOne, $charTwo){
     }else{ return FALSE;}
 }
 
-function part01($array){
+function part01_1($array)
+{
     $foundCase = TRUE;
-    while($foundCase) {
-        $foundCases = 0;
-        foreach ($array as $key => $item) {
-            if (array_key_exists ($key , $array)){
-                if ($key === 0) {
-                    continue;
-                }
-                if (isEqual($array[$key - 1], $array[$key])) {
-                    unset($array[$key], $array[$key - 1]);
-                    $array = array_values($array);
-                    $foundCases += 1;
+    echo count($array) . "\n";
+    $foundCases = 0;
+    foreach ($array as $key => $item) {
+        if (array_key_exists($key, $array)) {
+            if ($key === 0) {
+                continue;
+            }
+            if (!array_key_exists($key - 1, $array)) {
+                continue;
+            }
+            if (isEqual($array[$key - 1], $array[$key])) {
+                unset($array[$key], $array[$key - 1]);
+                $foundCases += 1;
+            }
+            else {
+                if ($foundCases < 1) {
+                    $foundCases = FALSE;
                 }
                 else {
-                    if ($foundCases<1) {
-                        $foundCases = FALSE;
-                    }
+                    $foundCases = TRUE;
                 }
-            }else{
-                break;
             }
         }
-        if (!$foundCases){
-            $foundCase = FALSE;
+        else {
+            break;
         }
     }
-    return $array;
+    $array = array_values($array);
+    echo count($array) . "\n";
+    if (!$foundCases) {
+        part01($array);
+    }
+    part01($array);
+    return count($array);
+}
+
+function part01($string){
+    $prestring = "";
+    $returnstring = $string;
+    for ($i = 0 ;$i<26; $i+=1 ){
+        $letters[] = chr(-159+$i).chr(833+$i);
+        $letters[] = chr(833+$i).chr(-159+$i);
+
+
+
+    }
+    while(TRUE){
+        $returnstring = str_replace($letters,"",$returnstring);
+        if ($prestring === $returnstring){
+            break;
+        }else{
+            $prestring = $returnstring;
+        }
+    }
+    return strlen($returnstring);
 }
 function part02(){}
 
-print_r(part01(filereader('testInput.txt')));
+
+
+for ($i=0;$i<100;$i+=1){
+    echo (part01(filereader('input.txt')))."\n";
+}
