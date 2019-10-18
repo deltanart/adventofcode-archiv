@@ -1,12 +1,13 @@
 #!/usr/bin/php
 <?php
 
+/**
+ * @param string $infile
+ * @return false|string
+ */
 function filereader($infile){
-//Function that returns the contents of a file and stores it line by line in an array
-$array = array();
-$handle = fopen($infile, "r") or die ("Unable to open the requested File");
-$line = fgets($handle);
-fclose($handle);
+$line = file_get_contents($infile);
+$line = trim($line);
 return $line;
 }
 
@@ -64,24 +65,40 @@ function part01($string){
     for ($i = 0 ;$i<26; $i+=1 ){
         $letters[] = chr(-159+$i).chr(833+$i);
         $letters[] = chr(833+$i).chr(-159+$i);
-
-
-
     }
     while(TRUE){
         $returnstring = str_replace($letters,"",$returnstring);
-        if ($prestring === $returnstring){
+        if ($prestring == $returnstring){
             break;
-        }else{
-            $prestring = $returnstring;
         }
+        $prestring = $returnstring;
+
     }
     return strlen($returnstring);
 }
-function part02(){}
+function part02($string){
+    $returnstring = $string;
+    $prestring = "";
+    for ($i = 0 ;$i<26; $i+=1 ){
+        $letters[chr(-159+$i)] = chr(-159+$i);
+        $letterS[chr(833+$i)] = chr(833+$i);
+        $Counting[chr(-159+$i)] = 0;
+    }
+    foreach ($Counting as $key =>$item) {
+        $returnstring = str_replace($letterS[strtoupper($key)],"",$returnstring);
+        $returnstring = str_replace($letters[$key],"",$returnstring);
+        $Counting[$key] = part01($returnstring);
+        $returnstring = $string;
+    }
+    print_r($Counting);
 
-
-
-for ($i=0;$i<100;$i+=1){
-    echo (part01(filereader('input.txt')))."\n";
+    asort($Counting);
+    $get = array_keys($Counting);
+    echo $Counting[$get[0]];
 }
+
+
+
+
+echo (part02(filereader('input.txt')))."\n";
+
