@@ -66,7 +66,8 @@ function guardMinCounter($guardarray, $data){
                 }
              }
         }
-
+        $markStart = (int)$markStart;
+        $markEnd = (int)$markEnd;
         for ($i = $markStart; $i< $markEnd;$i++){
             $guardarray[$id][$i] += 1;
         }
@@ -77,8 +78,8 @@ function guardMinCounter($guardarray, $data){
     $minutes = -1;
 
     foreach ($guardarray as $key=> $item) {
-        if (count($item)>$sleepingBeauty){
-            $sleepingBeauty = count($item);
+        if (array_sum($item)>$sleepingBeauty){
+            $sleepingBeauty = array_sum($item);
             $sleepingBeautyID = $key;
             arsort($item);
             $minutes = $item; //Compiler doesn't know this function.. Good n8;
@@ -98,4 +99,4 @@ function guardMinCounter($guardarray, $data){
 
 
 
-logMin(inputhandler(filereader("testInput.txt")));
+logMin(inputhandler(filereader("input.txt")));
