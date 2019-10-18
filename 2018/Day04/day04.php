@@ -73,6 +73,14 @@ function guardMinCounter($guardarray, $data){
         }
 
     };
+    part02($guardarray);
+
+
+
+}
+
+
+function part01($guardarray){
     $sleepingBeauty = 0;
     $sleepingBeautyID = 0;
     $minutes = -1;
@@ -93,10 +101,28 @@ function guardMinCounter($guardarray, $data){
     $minute = key($minutes);
     $ergebniss = $IntID * $minute;
     echo "Finally: ". $ergebniss ."\n";
-
-
 }
+function part02($guardarray){
+    $sleepingBeauty = 0;
+    $sleepingBeautyID = 0;
+    $minutes = -1;
 
-
+    foreach ($guardarray as $key=> $item) {
+        arsort($item);
+        if (max($item)>$sleepingBeauty){
+            $sleepingBeauty = max($item);
+            $sleepingBeautyID=$key;
+            $minutes = array_search($sleepingBeauty, $item); //Compiler doesn't know this function.. Good n8;
+        }
+    }
+    echo "ID: ".$sleepingBeautyID."\n";
+    echo "Summe: ".$sleepingBeauty."\n";
+    echo "Minute: ".$minutes."\n";
+    if(preg_match_all("/\d+/", $sleepingBeautyID, $FinalID));//Regex für den Zeitstempel in den [ ] Klammern
+    $IntID = (int)($FinalID[0][0]);
+    $minute = $minutes;
+    $ergebniss = $IntID * $minute;
+    echo "Finally: ". $ergebniss ."\n";
+}
 
 logMin(inputhandler(filereader("input.txt")));
