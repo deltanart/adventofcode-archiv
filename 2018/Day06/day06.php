@@ -33,8 +33,12 @@ function absoluteValue($integer){
 
 
 function cityMetric($ArrayPoint_A, $ArrayPoint_B){
+    if (!is_int($ArrayPoint_A[0])){echo "It is A[0]";}
+    if (!is_int($ArrayPoint_A[1])){echo "It is A[1]";}
+    if (!is_int($ArrayPoint_B[0])){echo "It is B[0]";}
+    if (!is_int($ArrayPoint_B[1])){echo "It is B[1]";}
     if (is_int($ArrayPoint_A[0]) && is_int($ArrayPoint_A[1]) && is_int($ArrayPoint_B[0])&& is_int($ArrayPoint_B[1])){
-        $delta = absoluteValue(absoluteValue($ArrayPoint_A[0]) - absoluteValue($ArrayPoint_B[0])) + absoluteValue(absoluteValue($ArrayPoint_A[1]) - absoluteValue($ArrayPoint_B[1]));
+        $delta = absoluteValue($ArrayPoint_A[0] - $ArrayPoint_B[0]) + absoluteValue($ArrayPoint_A[1] - $ArrayPoint_B[1]);
         return $delta;
     }else{
         exit("One of the Points does contain a non Numeric value\n");
@@ -51,7 +55,7 @@ function getGridDimensions($ArrayOfValues){
     $MaxX = 0;
     $MaxY = 0;
     foreach ($ArrayOfValues as$key => $arrayOfValue) {
-        if (is_int($arrayOfValue)){
+        if (is_int($arrayOfValue[0]) && is_int($arrayOfValue[1])){
             if ($MaxX<$arrayOfValue[0]){
                 $MaxX = $arrayOfValue[0];
             }
@@ -66,11 +70,10 @@ function getGridDimensions($ArrayOfValues){
     }else{
         exit("FOR TESTING ONLY: Got the wrong Grid dimensions\n");
     }
-}
+} //looks okay
 
 
 function Day06_part01($array){
-    print_r($array);
     $gridDim = getGridDimensions($array);
     $grid = array();
     for ($y = 0; $y<=$gridDim[1]; $y++){
@@ -78,6 +81,7 @@ function Day06_part01($array){
             $closeestDistance = 99999;
             $closeestPoint=99999;
             foreach ($array as $key=> $item) {
+                print_r($item);
                 if ($x == $item[0] && $y == $item[1]){
                     $grid[$x][$y] = $key;
                     continue 2;
@@ -95,7 +99,7 @@ function Day06_part01($array){
         }
     }
 
-    print_r($grid);
+    return 0;
 }
 
 //Day06_part01(filereader("testInput.txt"));
@@ -110,6 +114,7 @@ function Day06_part01($array){
  * the array contains a string of each test case and a bool of the testpass;
  */
 function testAbsuluteValue(){
+    echo "Testing Absulute Value: ";
     $tests = array();
     if (absoluteValue(0) === 0){$tests[] = "Test01: TRUE\n";}else{$tests[] ="Test01: FALSE\n";}
     if (absoluteValue(-0) === 0){$tests[] = "Test02: TRUE\n";}else{$tests[] ="Test02: FALSE\n";}
@@ -123,14 +128,35 @@ function testAbsuluteValue(){
 
     return $tests;
 }
-//testAbsuluteValue();
+//print_r(testAbsuluteValue());
 
 function test_cityMetric(){
-    if (cityMetric(array(0,1), array(6,-7)) === 12){echo "Test 01: True\n";}else{echo "Test 01: False\n";}
+    echo "Testing City Metric: ";
+    if (cityMetric(array(0,1), array(6,-7)) !== 14){echo "Test 01: False\n";}
+    if (cityMetric(array(0,1), array(6,7)) !== 12){echo "Test 02: False\n";}
+    if (cityMetric(array(0,0), array(6,6)) !== 12){echo "Test 03: False\n";}
+    if (cityMetric(array(6,6), array(0,0)) !== 12){echo "Test 04: False\n";}
+    echo " done\n";
+
 }
-//test_cityMetric();
+test_cityMetric();
 
 function test_getGridDimensions(){
-    if (getGridDimensions(array(array(1,1),array(5,0))) === array(5,1)){echo "Test01: True\n";}else{echo "Test01: False\n";}
+    echo "Testing getGridDimensions: ";
+    if (getGridDimensions(array(array(1,1),array(5,0))) !== array(5,1)){echo "Test01: False\n";}
+    if (getGridDimensions(array(array("t","e"),array("x","t"))) !== array(0,0)){echo "Test03: False\n";}
+    if (getGridDimensions(array(array(1,1),array(0,0))) !== array(1,1)){echo "Test03: False\n";}
+    if (getGridDimensions(array(array(0,0),array(0,0))) !== array(0,0)){echo "Test04: False\n";}
+    if (getGridDimensions(array(array(-1,-1),array(1,1))) !== array(1,1)){echo "Test05: False\n";}
+    echo " done.\n";
 }
 test_getGridDimensions();
+
+function test_Day06_part01(){
+    if (Day06_part01(filereader("testInput.txt")) === 17){
+        echo "Test Input successful. Output of the RawInput: ".Day06_part01(filereader("input.txt"))."\n";
+    }else{
+        exit("Still stuff to do!");
+    }
+}
+test_Day06_part01();
