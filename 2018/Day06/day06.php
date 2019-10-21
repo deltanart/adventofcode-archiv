@@ -33,20 +33,56 @@ function absoluteValue($integer){
 
 
 function cityMetric($ArrayPoint_A, $ArrayPoint_B){
-    $delta = absoluteValue($ArrayPoint_A[0] - $ArrayPoint_B[0]) + absoluteValue($ArrayPoint_A[1] - $ArrayPoint_B[1]);
+    $delta = absoluteValue(absoluteValue($ArrayPoint_A[0]) - absoluteValue($ArrayPoint_B[0])) +
+        absoluteValue(absoluteValue($ArrayPoint_A[1]) - absoluteValue($ArrayPoint_B[1]));
     return $delta;
 }
 //print_r(filereader("testInput.txt"));
 
+/**
+ * @param $ArrayOfValues
+ * @return array
+ */
+function getGridDimensions($ArrayOfValues){
+    $MaxX = 0;
+    $MaxY = 0;
+    foreach ($ArrayOfValues as$key => $arrayOfValue) {
+        if ($MaxX<$arrayOfValue[0]){
+            $MaxX = $arrayOfValue[0];
+        }
+        if ($MaxY<$arrayOfValue[1]){
+            $MaxY = $arrayOfValue[1];
+        }
+    }
+    return array($MaxX, $MaxY);
+}
+
+print_r(getGridDimensions(filereader("testInput.txt"))); //[0] => 8 ; [1] =>9
+
+function Day06_part01($array){
+    $gridDim = getGridDimensions($array);
+    $grid = array();
+    for ($y = 0; $y<=$gridDim[1]; $y++){
+        for ($x = 0; $x<=$gridDim[0]; $x++){
+            foreach ($array as $key=> $item) {
+                if ($x == $item[0] && $y == $item[1]){
+                    $grid[$x][$y] = $key;
+                    continue 2;
+                }
+            }
+            $grid[$x][$y] = ".";
+        }
+    }
+
+    print_r($grid);
+}
+
+Day06_part01(filereader("testInput.txt"));
 
 
 
 
-
-
-
-
-//*******  TESTS ******
+//*******  TESTS  ******
 
 /**
  * @return array
@@ -66,8 +102,14 @@ function testAbsuluteValue(){
 
     return $tests;
 }
-
+//testAbsuluteValue();
 
 function test_cityMetric(){
-
+    if (cityMetric(array(0,1), array(6,-7)) === 12){echo "Test 01: True\n";}else{echo "Test 01: False\n";}
 }
+//test_cityMetric();
+
+function test_getGridDimensions(){
+    if (getGridDimensions(array(array(1,1),array(5,0))) === array(5,1)){echo "Test01: True\n";}else{echo "Test01: False\n";}
+}
+//test_getGridDimensions();
