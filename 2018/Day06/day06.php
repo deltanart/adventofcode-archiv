@@ -115,14 +115,29 @@ function Day06_part01($array){
             }
         }
     }
-    return $grid;
+    return calcArea($grid);
 }
 
 
 function calcArea($array){
+    $results = array();
+    //problem mit count!
+    $corners = array($array[0][0],$array[0][count($array[0])],$array[count($array)][0], $array[count($array)][count($array[count($array)])]);
+    print_r($corners);
+    foreach ($array as $keyA => $itemX) {
+        $partN = array_count_values($itemX);
+        foreach ($partN as $key => $item) {
+            if (in_array($item,$corners)){
+                continue;
+            }else{
+                $results[$key] += $item;
+            }
 
+        }
+    }
+    arsort($results);
+    return $results;
 }
-//Day06_part01(filereader("testInput.txt"));
 
 
 
