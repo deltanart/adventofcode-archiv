@@ -113,39 +113,15 @@ function Day06_part01($array){
                     $grid[$x][$y] = $closeestPoint;
                 }
             }
-
-            if ($x == 0 || $x ===(int)$gridDim[0] - 1){
-                $infinite[] = $closeestPoint;
-            }
-            if ($y == 0 || $y === (int)$gridDim[1] - 1){
-                $infinite[] = $closeestPoint;
-            }
-
-            if (isset($CountedGrid[$closeestPoint])){
-                $CountedGrid[$closeestPoint] += 1;
-            }else{
-                $CountedGrid[$closeestPoint] = 1;
-            }
-
-
-        }
-
-    }
-    print_r($infinite);
-    echo "\n";
-    foreach ($CountedGrid as $key => $item) {
-        echo "Key: $key; Item: $item; \n";
-        echo "To Del: ".array_search($key,$infinite )."\n";
-        if (array_search($key,$infinite )){
-            print_r("Del: $key; \n");
-            unset($CountedGrid[$key]);
         }
     }
-
-    arsort($CountedGrid);
-    return $CountedGrid;
+    return $grid;
 }
 
+
+function calcArea($array){
+
+}
 //Day06_part01(filereader("testInput.txt"));
 
 
