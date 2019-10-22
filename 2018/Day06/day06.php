@@ -121,8 +121,14 @@ function Day06_part01($array){
 
 function calcArea($array){
     $results = array();
-    //problem mit count!
-    $corners = array($array[0][0],$array[0][count($array[0])],$array[count($array)][0], $array[count($array)][count($array[count($array)])]);
+    //no more problem: Issue was the offset by one because we count starting from 0
+    $corners = array(
+            $array[0][0],
+        $array[0][count($array[0])-1],
+        $array[count($array)-1][0],
+        $array[count($array)-1][count($array[0])-1],
+        "."
+    );
     print_r($corners);
     foreach ($array as $keyA => $itemX) {
         $partN = array_count_values($itemX);
