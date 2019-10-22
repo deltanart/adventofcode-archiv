@@ -21,15 +21,8 @@ function filereader($infile){
 }
 
 function absoluteValue($integer){
-    if (is_int($integer)){
-        if ($integer < 0){
-            return $integer *(-1);
-        }else{
-            return $integer;
-        }
-    }
-    return "Fatal Error: The value is not in Integer in the absoluteValue-Function\n";
-
+    //why not use abs()? ;D
+    return abs($integer);
 }
 
 /**
@@ -86,7 +79,6 @@ function Day06_part01($array){
     echo "Grid Dimensions: ";
     print_r($gridDim);
     $grid = array();
-    $CountedGrid = array();
     $infinite = array();
 
     for ($y = 0; $y<(int)$gridDim[1]; $y++){
@@ -113,36 +105,39 @@ function Day06_part01($array){
                     $grid[$x][$y] = $closeestPoint;
                 }
             }
+            if ($x === 0 || $y === 0){
+                $infinite[] = $grid[$x][$y];
+            }
+            if ($x === $gridDim[0]-1 || $y === $gridDim[1]-1){
+                $infinite[] = $grid[$x][$y];
+            }
         }
     }
-    return calcArea($grid);
+    return calcArea($grid, $infinite);
 }
 
 
-function calcArea($array){
+function calcArea($array, $infinite){
     $results = array();
-    //no more problem: Issue was the offset by one because we count starting from 0
-    $corners = array(
-            $array[0][0],
-        $array[0][count($array[0])-1],
-        $array[count($array)-1][0],
-        $array[count($array)-1][count($array[0])-1],
-        "."
-    );
+    $corners = $infinite;
     print_r($corners);
     foreach ($array as $keyA => $itemX) {
         $partN = array_count_values($itemX);
         foreach ($partN as $key => $item) {
-            if (in_array($item,$corners)){
+            echo "Key: $key\n";
+            if (in_array($key,$corners)){
                 continue;
-            }else{
+            }elseif(isset($results[$key])){
                 $results[$key] += $item;
+            }else{
+                $results[$key] = $item;
             }
 
         }
     }
     arsort($results);
-    return $results;
+    $returnerKey = array_keys($results);
+    return $results[$returnerKey[0]];
 }
 
 
