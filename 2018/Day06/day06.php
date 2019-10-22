@@ -17,7 +17,6 @@ function filereader($infile){
     foreach ($array as $key =>$item) {
         $array[$key] = explode(", ", $item);
     }
-    print_r($array);
     return $array;
 }
 
@@ -88,35 +87,62 @@ function Day06_part01($array){
     print_r($gridDim);
     $grid = array();
     $CountedGrid = array();
+    $infinite = array();
+
     for ($y = 0; $y<(int)$gridDim[1]; $y++){
         for ($x = 0; $x<(int)$gridDim[0]; $x++){
-            $closeestDistance = 99999;
-            $closeestPoint=99999;
+            $closeestDistance = 99999;//high number because we look for the lowest number
+            $closeestPoint=99999;//same as above
             foreach ($array as $key=> $item) {
+                //checks if we are already on a point. if so write the id here and continue with the code below the foreach
                 if ($x === $item[0] && $y === $item[1]){
                     $grid[$x][$y] = $key;
-                    continue 2;
+                    break;
                 }
-                if (cityMetric(array($x, $y),$item) === $closeestDistance){
+
+                //tests if there are multiple points equally far apart
+                if (cityMetric(array($x, $y),$item) == $closeestDistance){
                     $grid[$x][$y] = ".";
-                    continue 2;
+                    continue;
                 }
+
+                //tests which point is the closest to the current location
                 if (cityMetric(array($x, $y), $item)<$closeestDistance){
                     $closeestDistance = cityMetric(array($x, $y), $item);
                     $closeestPoint = $key;
+                    $grid[$x][$y] = $closeestPoint;
                 }
             }
-            $grid[$x][$y] = $closeestPoint;
+
+            if ($x == 0 || $x ===(int)$gridDim[0] - 1){
+                $infinite[] = $closeestPoint;
+            }
+            if ($y == 0 || $y === (int)$gridDim[1] - 1){
+                $infinite[] = $closeestPoint;
+            }
+
             if (isset($CountedGrid[$closeestPoint])){
                 $CountedGrid[$closeestPoint] += 1;
             }else{
                 $CountedGrid[$closeestPoint] = 1;
             }
 
+
+        }
+
+    }
+    print_r($infinite);
+    echo "\n";
+    foreach ($CountedGrid as $key => $item) {
+        echo "Key: $key; Item: $item; \n";
+        echo "To Del: ".array_search($key,$infinite )."\n";
+        if (array_search($key,$infinite )){
+            print_r("Del: $key; \n");
+            unset($CountedGrid[$key]);
         }
     }
 
-
+    arsort($CountedGrid);
     return $CountedGrid;
 }
 
@@ -161,18 +187,19 @@ test_cityMetric();
 
 function test_getGridDimensions(){
     echo "Testing getGridDimensions: ";
-    if (getGridDimensions(array(array(1,1),array(5,0))) !== array(5,1)){echo "Test01: False\n";}
+    if (getGridDimensions(array(array(1,1),array(5,0))) !== array(10,10)){echo "Test01: False\n";}
     if (getGridDimensions(array(array("t","e"),array("x","t"))) !== array(0,0)){echo "Test03: False\n";}
-    if (getGridDimensions(array(array(1,1),array(0,0))) !== array(1,1)){echo "Test03: False\n";}
+    if (getGridDimensions(array(array(1,1),array(0,0))) !== array(10,10)){echo "Test03: False\n";}
     if (getGridDimensions(array(array(0,0),array(0,0))) !== array(0,0)){echo "Test04: False\n";}
-    if (getGridDimensions(array(array(-1,-1),array(1,1))) !== array(1,1)){echo "Test05: False\n";}
+    if (getGridDimensions(array(array(-1,-1),array(1,1))) !== array(10,10)){echo "Test05: False\n";}
     echo " done.\n";
 }
 test_getGridDimensions();
 
 function test_Day06_part01(){
     if (Day06_part01(filereader("testInput.txt")) === 17){
-        echo "Test Input successful. Output of the RawInput: ".Day06_part01(filereader("input.txt"))."\n";
+        echo "Test Input successful. Output of the RawInput: \n";
+        print_r(Day06_part01(filereader("input.txt")));
     }else{
         echo "Complete Grid: \n";
         print_r(Day06_part01(filereader("testInput.txt")));
