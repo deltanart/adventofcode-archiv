@@ -2,9 +2,10 @@
 <?php
 
 /**
- * @param string $infile
- * @return false|string
+ * @param $infile
+ * @return array
  */
+
 function filereader($infile){
     //Function that returns the contents of a file and stores it line by line in an array
     $array = array();
@@ -16,6 +17,7 @@ function filereader($infile){
     foreach ($array as $key =>$item) {
         $array[$key] = explode(", ", $item);
     }
+    print_r($array);
     return $array;
 }
 
@@ -31,15 +33,19 @@ function absoluteValue($integer){
 
 }
 
-
+/**
+ * @param $ArrayPoint_A
+ * @param $ArrayPoint_B
+ * @return int
+ */
 function cityMetric($ArrayPoint_A, $ArrayPoint_B){
-    if (!is_int($ArrayPoint_A[0])){echo "It is A[0]";}
-    if (!is_int($ArrayPoint_A[1])){echo "It is A[1]";}
-    if (!is_int($ArrayPoint_B[0])){echo "It is B[0]";}
-    if (!is_int($ArrayPoint_B[1])){echo "It is B[1]";}
+    if (!is_int($ArrayPoint_A[0])){$ArrayPoint_A[0] = (int)$ArrayPoint_A[0];}
+    if (!is_int($ArrayPoint_A[1])){$ArrayPoint_A[1] = (int)$ArrayPoint_A[1];}
+    if (!is_int($ArrayPoint_B[0])){$ArrayPoint_B[0] = (int)$ArrayPoint_B[0];}
+    if (!is_int($ArrayPoint_B[1])){$ArrayPoint_B[1] = (int)$ArrayPoint_B[1];}
     if (is_int($ArrayPoint_A[0]) && is_int($ArrayPoint_A[1]) && is_int($ArrayPoint_B[0])&& is_int($ArrayPoint_B[1])){
         $delta = absoluteValue($ArrayPoint_A[0] - $ArrayPoint_B[0]) + absoluteValue($ArrayPoint_A[1] - $ArrayPoint_B[1]);
-        return $delta;
+        return (int)$delta;
     }else{
         exit("One of the Points does contain a non Numeric value\n");
     }
@@ -55,15 +61,18 @@ function getGridDimensions($ArrayOfValues){
     $MaxX = 0;
     $MaxY = 0;
     foreach ($ArrayOfValues as$key => $arrayOfValue) {
-        if (is_int($arrayOfValue[0]) && is_int($arrayOfValue[1])){
-            if ($MaxX<$arrayOfValue[0]){
-                $MaxX = $arrayOfValue[0];
-            }
-            if ($MaxY<$arrayOfValue[1]){
-                $MaxY = $arrayOfValue[1];
-            }
+        if ($MaxX<(int)$arrayOfValue[0]){
+            $MaxX = (int)$arrayOfValue[0];
         }
-
+        if ($MaxY<(int)$arrayOfValue[1]){
+            $MaxY = (int)$arrayOfValue[1];
+        }
+    }
+    if ($MaxX % 10 != 0){
+        $MaxX += 10-($MaxX % 10);
+    }
+    if ($MaxY % 10 != 0){
+        $MaxY += 10-($MaxY % 10);
     }
     if (is_int($MaxX) && is_int($MaxY)) {
         return array($MaxX, $MaxY);
@@ -75,31 +84,40 @@ function getGridDimensions($ArrayOfValues){
 
 function Day06_part01($array){
     $gridDim = getGridDimensions($array);
+    echo "Grid Dimensions: ";
+    print_r($gridDim);
     $grid = array();
-    for ($y = 0; $y<=$gridDim[1]; $y++){
-        for ($x = 0; $x<=$gridDim[0]; $x++){
+    $CountedGrid = array();
+    for ($y = 0; $y<(int)$gridDim[1]; $y++){
+        for ($x = 0; $x<(int)$gridDim[0]; $x++){
             $closeestDistance = 99999;
             $closeestPoint=99999;
             foreach ($array as $key=> $item) {
-                print_r($item);
-                if ($x == $item[0] && $y == $item[1]){
+                if ($x === $item[0] && $y === $item[1]){
                     $grid[$x][$y] = $key;
+                    continue 2;
+                }
+                if (cityMetric(array($x, $y),$item) === $closeestDistance){
+                    $grid[$x][$y] = ".";
                     continue 2;
                 }
                 if (cityMetric(array($x, $y), $item)<$closeestDistance){
                     $closeestDistance = cityMetric(array($x, $y), $item);
                     $closeestPoint = $key;
                 }
-                if (cityMetric(array($x, $y),$item) == $closeestDistance){
-                    $grid[$x][$y] = ".";
-                    continue 2;
-                }
             }
             $grid[$x][$y] = $closeestPoint;
+            if (isset($CountedGrid[$closeestPoint])){
+                $CountedGrid[$closeestPoint] += 1;
+            }else{
+                $CountedGrid[$closeestPoint] = 1;
+            }
+
         }
     }
 
-    return 0;
+
+    return $CountedGrid;
 }
 
 //Day06_part01(filereader("testInput.txt"));
@@ -156,7 +174,9 @@ function test_Day06_part01(){
     if (Day06_part01(filereader("testInput.txt")) === 17){
         echo "Test Input successful. Output of the RawInput: ".Day06_part01(filereader("input.txt"))."\n";
     }else{
-        exit("Still stuff to do!");
+        echo "Complete Grid: \n";
+        print_r(Day06_part01(filereader("testInput.txt")));
+        exit("\nStill stuff to do!\n");
     }
 }
 test_Day06_part01();
