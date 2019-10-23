@@ -43,18 +43,17 @@ function findStart($array, $n){
         }
     }
     $start = array_search($array[$n][0],$array[$n]);
-    return  findEnd($array, $start);
+    $ende = findEnd($array, $start);
+    return $ende;
 }
 
 function findEnd($array, $start){
     for ($searchIndex = 0; $searchIndex < count($array); ++$searchIndex){
-        if ($searchIndex == $start){
-            continue;
-        }
-        if ($num = array_search($array[$start][1], $array[$searchIndex])){
-            echo $array[$start][1];
+        $num = array_search($array[$start][1], $array[$searchIndex]);
+        if ($num==0){
             findEnd($array, $num);
         }
+
     }
 
     return $array[$start][0];
