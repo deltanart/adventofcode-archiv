@@ -14,8 +14,49 @@ function filereader($infile){
         $array[]= $line;
     }
     fclose($handle);
-    foreach ($array as $key =>$item) {
-        $array[$key] = explode(". ", $item);
-    }
-    return $array;
+    return filterInput($array);
 }
+
+function filterInput($array){
+    $filteredInput = array();
+    foreach ($array as $key => $item) {
+        preg_match_all("/\s\w\s/",$item, $matches);
+        $filteredInput[$key] = $matches[0];
+    }
+    return $filteredInput;
+}
+
+
+function D7part01($array){
+
+
+
+    return findX($array,0);
+}
+
+function findX($array, $n){
+
+    for ($k = 0; $k<count($array); ++$k){
+        if ($k === $n){
+            continue;
+        }
+        if ($array[$n][0] == $array[$k][1]){
+            findX($array, $k);
+        }else{
+            return $array[$n][0];
+        }
+    }
+
+}
+
+
+function testD7part01(){
+    if (D7part01(filereader("testInput.txt")) === "CABDFE"){
+        echo "Testdata: OKAY\nStarting with the Dataset: ";
+        print_r(D7part01(filereader("testInput.txt")));
+    }else{
+        echo "Test Failed!\n";
+        print_r(D7part01(filereader("testInput.txt")));
+    }
+}
+testD7part01();
