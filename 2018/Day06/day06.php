@@ -141,7 +141,38 @@ function calcArea($array, $infinite){
 }
 
 
+function Day06_part02($array, $maxDistance){
+    $gridDim = getGridDimensions($array);
+    $grid = array();
 
+    for ($y = 0; $y<(int)$gridDim[1]; $y++){
+        for ($x = 0; $x<(int)$gridDim[0]; $x++){
+            $closeestDistance = array();
+            foreach ($array as $key=> $item) {
+                //checks if we are already on a point. if so write the id here and continue with the code below the foreach
+                if ($x === $item[0] && $y === $item[1]){
+                    $grid[$x][$y] = $key;
+                    break;
+                }else {
+                    $closeestDistance[] = cityMetric(array($x, $y), $item);
+                }
+            }
+            $grid[$x][$y] = array_sum($closeestDistance);
+
+
+        }
+    }
+    $area = 0;
+    foreach ($grid as $keyX => $x) {
+        foreach ($grid[$keyX] as $keyY => $y) {
+            if ($grid[$keyX][$keyY] < $maxDistance){
+                $area += 1;
+            }
+        }
+
+    }
+    return $area;
+}
 
 //*******  TESTS  ******
 
@@ -198,4 +229,16 @@ function test_Day06_part01(){
         exit("\nStill stuff to do!\n");
     }
 }
-test_Day06_part01();
+//test_Day06_part01();
+
+function test_Day06_part02(){
+    if (Day06_part02(filereader("testInput.txt"),32) === 16){
+        echo "Test Input successful. Output of the RawInput: \n";
+        print_r(Day06_part02(filereader("input.txt"),10000));
+    }else{
+        echo "Complete Area: \n";
+        print_r(Day06_part02(filereader("testInput.txt"),32));
+        exit("\nStill stuff to do!\n");
+    }
+}
+test_Day06_part02();
