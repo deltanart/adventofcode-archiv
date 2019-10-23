@@ -29,26 +29,36 @@ function filterInput($array){
 
 function D7part01($array){
 
-
-
-    return findX($array,0);
+    return findStart($array,0);
 }
 
-function findX($array, $n){
+function findStart($array, $n){
 
-    for ($k = 0; $k<count($array); ++$k){
-        if ($k === $n){
+    if ($n > count($array)-1){
+        exit("\nEnd of Array\n");
+    }
+    for ($list = 0; $list < count($array); ++$list){
+        if ($array[$n][0] === $array[$list][1]){
+            findStart($array, $n+1);
+        }
+    }
+    $start = array_search($array[$n][0],$array[$n]);
+    return  findEnd($array, $start);
+}
+
+function findEnd($array, $start){
+    for ($searchIndex = 0; $searchIndex < count($array); ++$searchIndex){
+        if ($searchIndex == $start){
             continue;
         }
-        if ($array[$n][0] == $array[$k][1]){
-            findX($array, $k);
-        }else{
-            return $array[$n][0];
+        if ($num = array_search($array[$start][1], $array[$searchIndex])){
+            echo $array[$start][1];
+            findEnd($array, $num);
         }
     }
 
+    return $array[$start][0];
 }
-
 
 function testD7part01(){
     if (D7part01(filereader("testInput.txt")) === "CABDFE"){
@@ -57,6 +67,7 @@ function testD7part01(){
     }else{
         echo "Test Failed!\n";
         print_r(D7part01(filereader("testInput.txt")));
+        echo "\n";
     }
 }
 testD7part01();
