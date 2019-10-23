@@ -28,12 +28,29 @@ function filterInput($array){
 
 
 function D7part01($array){
+    $output = "";
+    $output .= $parts[] = $start = findStart($array,0);
 
-    return findStart($array,0);
+    for ($steps = 0; $steps<count($array); ++$steps){
+        foreach ($parts as $part) {
+            if (in_array($array[$part][0], $parts)){
+
+
+            }
+        }
+
+    }
+
+    return $output;
 }
 
-function findStart($array, $n){
 
+/**
+ * @param $array
+ * @param $n
+ * @return mixed
+ */
+function findStart($array, $n){
     if ($n > count($array)-1){
         exit("\nEnd of Array\n");
     }
@@ -43,21 +60,10 @@ function findStart($array, $n){
         }
     }
     $start = array_search($array[$n][0],$array[$n]);
-    $ende = findEnd($array, $start);
-    return $ende;
-}
-
-function findEnd($array, $start){
-    for ($searchIndex = 0; $searchIndex < count($array); ++$searchIndex){
-        $num = array_search($array[$start][1], $array[$searchIndex]);
-        if ($num==0){
-            findEnd($array, $num);
-        }
-
-    }
-
     return $array[$start][0];
 }
+
+
 
 function testD7part01(){
     if (D7part01(filereader("testInput.txt")) === "CABDFE"){
