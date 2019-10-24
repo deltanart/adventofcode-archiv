@@ -33,51 +33,20 @@ function filterInput($array){
 
 
 function D7part01($array){
-    $output = "";
-    $output .= $parts[] = $start[] = findStart($array,0);
-    print_r(findStart($array,0));
 
-
-    print_r(recursiveTreeData($array, $start));
-
-    print_r($parts);
-
-    return $output;
-}
-function recursiveTreeData($DataArray,$startKeys){
-    $output = "";
-
-    for ($posistionInArray = 0;$posistionInArray<count($DataArray); ++$posistionInArray){
-        foreach ($startKeys as $nr => $startKey) {
-            $nextKeys[] = array_search($DataArray[$startKeys][1], $DataArray);
-            $output .= recursiveTreeData($DataArray, $nextKeys);
-
-        }
-    }
-    return $output;
 }
 
-
-/**
- * @param $array
- * @param $n
- * @return mixed
- */
-function findStart($array, $n){
-    if ($n > count($array)-1){
-        exit("\nEnd of Array\n");
-    }
-    for ($list = 0; $list < count($array); ++$list){
-        if ($array[$n][0] === $array[$list][1]){
-            findStart($array, $n+1);
-        }
-    }
-
-    $start[] = array_search($array[$n][0],$array[$n]);
-    return $start;
+//function that deletes the task from the array on every instance to move on
+function deleteTaskFromArray($array, $toDelete){
+    array_replace();
+    //find every instance of 'toDelete': if @array[k][0] -> delete @array[k] (hole entry)
+    // if @array[k][1] -> should not exist but please delete and tell it to the console!
 }
 
-
+//function that finds the next task that has no dependency upfront
+function findNextTask(){
+//get element @array[k][0] that is not @array[n][1]
+}
 
 function testD7part01(){
     if (D7part01(filereader("testInput.txt")) === "CABDFE"){
