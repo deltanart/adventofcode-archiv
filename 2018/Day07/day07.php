@@ -35,11 +35,14 @@ function filterInput($array){
 function D7part01($Tasks){
     $output = "";
     do{
+        echo "Get Task: ";
         $CurrentTask = findNextTask($Tasks);
+        echo "$CurrentTask-\n";
         if ($CurrentTask == ""){continue;}
         $output .= $CurrentTask;
         echo "Output: $output\n";
         $Tasks = deleteTaskFromArray($Tasks,$CurrentTask);
+        echo "Deleted Entry\n";
     }while (TRUE);
     return $output;
 }
@@ -78,17 +81,17 @@ function findNextTask($Tasks){
             if (!isset($Tasks[$arraySteps])){
                 continue;
             }
-
-            if (!array_search($Tasks[$arraySteps][0], $Tasks)){
-                print_r(array_search($Tasks[$arraySteps][0], $Tasks));
-                return $Tasks[$arraySteps][0];
+            foreach ($Tasks as $task) {
+                if (array_search($Tasks[$arraySteps][0], $Tasks)){
+                    $nextTaskKey = array_search($Tasks[$arraySteps][0], $Tasks);
+                    $NextTask = $Tasks[$nextTaskKey][0];
+                }
             }
 
-        }
+        }return $Tasks[$NextTask][0];
     }
-
-
 }
+
 
 //findNextTask(filereader("testInput.txt"));
 
