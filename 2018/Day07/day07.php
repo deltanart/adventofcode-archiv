@@ -27,6 +27,7 @@ function filterInput($array){
         preg_match_all("/\s\w\s/",$item, $matches);
         $filteredInput[$key] = $matches[0];
     }
+    echo "Filtered Input:\n";
     print_r($filteredInput);
     return $filteredInput;
 }
@@ -56,7 +57,6 @@ function deleteTaskFromArray($Tasks, $toDelete){
     }
     //ConsoleOutput:
     echo "Post-Del: ";
-    print_r($Tasks);
     echo "\n";
 
     return $Tasks;
@@ -71,24 +71,34 @@ testDeleteTaskFromArray();
 
 //function that finds the next task that has no dependency upfront
 function findNextTask($Tasks){
-//get element @array[k][0] that is not @array[n][1]
-//if element @array[k][1] is not @array[k][0] -> attach array[k][1] to the output
-    if (count($Tasks) == 1){
+//get element @array[k][0] that is not @array[n][1] -> get the current Task that has no dependency
+//if element @array[k][1] is not @array[k][0] -> attach array[k][1] to the output -> LAST ELEMENT
+    $NextTask = "";
+    echo "We got ".count($Tasks)." Tasks to do.\n";
+
+    if (count($Tasks) === 2){
         $key = key($Tasks);
         return ($Tasks[$key][0])."".$Tasks[$key][1];
     }else{
+        echo "WHAT\n";
         for ($arraySteps = 0; $arraySteps<count($Tasks)-1; ++$arraySteps) {
-            if (!isset($Tasks[$arraySteps])){
+            if (!isset($Tasks[$arraySteps][0])){
+                echo "SKIPPED: Level 1\n";
                 continue;
             }
             foreach ($Tasks as $task) {
-                if (array_search($Tasks[$arraySteps][0], $Tasks)){
+                if ($Tasks[key($task)] === NULL){
+                    echo "SKIPPED Level 2: ".key($task)."\n";
+                    continue;
+                }
+                if (array_search($Tasks[$arraySteps][0], $Tasks[key($task)]) === 0){
                     $nextTaskKey = array_search($Tasks[$arraySteps][0], $Tasks);
                     $NextTask = $Tasks[$nextTaskKey][0];
+                    echo "NextTask: $NextTask\n";
                 }
             }
-
-        }return $Tasks[$NextTask][0];
+        }
+        if ($NextTask === ""){exit("NOPE\n");}else{return $NextTask;}
     }
 }
 
