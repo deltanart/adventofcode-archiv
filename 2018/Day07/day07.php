@@ -33,34 +33,36 @@ function filterInput($array){
 
 function D7part01($Tasks){
     $output = "";
-    do{
+    while(!empty($Tasks)){
         $CurrentTask = findNextTask($Tasks);
         $Tasks = deleteTaskFromArray($Tasks,$CurrentTask);
         $output .= $CurrentTask;
-    }while(count($Tasks) > 1);
-    $CurrentTask = findNextTask($Tasks);
-    $output .= $CurrentTask;
+    }
+
     $output = str_replace(" ", "", $output);
     return $output;
 }
 
 function D7part02($Tasks){
+    $worker0 = array();
+    $worker1 = array();
+    $worker2 = array();
+    $worker3 = array();
+    $worker4 = array();
+
 
 }
 
 //function that deletes the task from the array on every instance to move on
 function deleteTaskFromArray($Tasks, $toDelete){
-    $NumDeletions = 0;
-    foreach ($Tasks as $key => $item) {
-        if($item[0] == $toDelete){
-            $NumDeletions += 1;
-            unset($Tasks[$key]);
+    if (!empty($Tasks) and isset($toDelete)){
+        foreach ($Tasks as $key => $item) {
+            if($item[0] === $toDelete){
+                unset($Tasks[$key]);
+            }
         }
+        return array_values($Tasks);
     }
-    if ($Tasks === NULL){
-        exit("We are done here!\n");
-    }
-    return array_values($Tasks);
 }
 
 function testDeleteTaskFromArray(){
@@ -80,7 +82,6 @@ function findNextTask($Tasks){
         return ($Tasks[$key][0])."".$Tasks[$key][1];
     }else{
         for ($arraySteps = 0; $arraySteps<count($Tasks); ++$arraySteps) {
-
             foreach ($Tasks as $task) {
                 if (!isset($Tasks[key($task)])) {
                     continue;
@@ -88,13 +89,10 @@ function findNextTask($Tasks){
                 if ($Tasks[$arraySteps][0] === $task[1]) {
                     continue 2;
                 }
-
             }
             if (!in_array($Tasks[$arraySteps][0],$AvailableNextTasks)){
                 $AvailableNextTasks[] = $Tasks[$arraySteps][0];
             }
-
-
         }
         $NextTask = $AvailableNextTasks[0];
         foreach ($AvailableNextTasks as $availableTask) {
@@ -111,41 +109,37 @@ function findNextTask($Tasks){
 
 function testD7part01(){
     if (D7part01(filereader("testInput.txt")) === "CABDFE"){
-        //echo "Testdata: OKAY\nStarting with the Dataset: ";
-        if(D7part01(filereader("input.txt")) ==="AEMNPOJWISZCDFUKBXQTHVLGRY"){
-            //echo "\nPart01: Correct!\n";
-        }
-        else{
-            echo "\n";
-            print_r(D7part01(filereader("input.txt")));
-            echo " is NOT = \"AEMNPOJWISZCDFUKBXQTHVLGRY\"\n";
-        }
+        echo D7part01(filereader("testInput.txt"))."\n";
+        echo "Testdata: OKAY\nStarting with the Dataset: ";
     }else{
-        echo "Test Failed!\n";
-        print_r(D7part01(filereader("testInput.txt")));
-        echo "\n";
+        echo D7part01(filereader("testInput.txt"))."\n";
     }
+    if(D7part01(filereader("input.txt")) ==="AEMNPOJWISZCDFUKBXQTHVLGRY"){
+        echo "\nPart01: Correct!\n";
+    }
+    else{
+        echo "\n";
+        print_r(D7part01(filereader("input.txt")));
+        echo " is NOT = \"AEMNPOJWISZCDFUKBXQTHVLGRY\"\n";
+    }
+
 }
 
+testD7part01();
 
-
-
-
-$time_start = microtime(true);
-$time_end = microtime(true);
-$time = $time_end - $time_start;
-
-// Die Skriptverarbeitung fuer einen bestimmten Zeitraum unterbrechen
-$counter = 0;
-while ($time < 1.0){
-    testD7part01();
-    $counter += 1;
-    $time_end = microtime(true);
+function timetestP1($TimeToRun)
+{
+    $counter = 0;
+    $time_start = microtime(TRUE);
+    $time_end = microtime(TRUE);
     $time = $time_end - $time_start;
+    while ($time <= $TimeToRun) {
+        testD7part01();
+        $counter += 1;
+        $time_end = microtime(TRUE);
+        $time = $time_end - $time_start;
+    }
+    // Die Skriptverarbeitung fuer einen bestimmten Zeitraum unterbrechen
+    echo "In $time Sekunden wurde die Funktion $counter Mal ausgeführt\n";
 }
-
-
-$time_end = microtime(true);
-$time = $time_end - $time_start;
-
-echo "In $time Sekunden die Funktion $counter Mal ausgeführt\n";
+//timetestP1(10);
