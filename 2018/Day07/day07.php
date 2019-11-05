@@ -34,25 +34,26 @@ function filterInput($array){
 function D7part01($Tasks){
     $output = "";
     do{
-        echo "Get Task: ";
         $CurrentTask = findNextTask($Tasks);
-        echo "$CurrentTask-\n";
         $Tasks = deleteTaskFromArray($Tasks,$CurrentTask);
-        echo "Deleted Entry\n";
-        echo "Output: $output\n";
         $output .= $CurrentTask;
     }while(count($Tasks) > 1);
     $CurrentTask = findNextTask($Tasks);
     $output .= $CurrentTask;
     $output = str_replace(" ", "", $output);
-    echo $output;
     return $output;
+}
+
+function D7part02($Tasks){
+
 }
 
 //function that deletes the task from the array on every instance to move on
 function deleteTaskFromArray($Tasks, $toDelete){
+    $NumDeletions = 0;
     foreach ($Tasks as $key => $item) {
         if($item[0] == $toDelete){
+            $NumDeletions += 1;
             unset($Tasks[$key]);
         }
     }
@@ -73,24 +74,32 @@ testDeleteTaskFromArray();
 function findNextTask($Tasks){
 //get element @array[k][0] that is not @array[n][1] -> get the current Task that has no dependency
 //if element @array[k][1] is not @array[k][0] -> attach array[k][1] to the output -> LAST ELEMENT
-    $NextTask = "";
-    echo "We got ".count($Tasks)." Tasks to do.\n";
+    $AvailableNextTasks = array();
     if (count($Tasks) === 1){
         $key = key($Tasks);
         return ($Tasks[$key][0])."".$Tasks[$key][1];
     }else{
-        for ($arraySteps = 0; $arraySteps<count($Tasks)-1; ++$arraySteps) {
-            if (!isset($Tasks[$arraySteps][0])){
-                continue;
-            }
+        for ($arraySteps = 0; $arraySteps<count($Tasks); ++$arraySteps) {
+
             foreach ($Tasks as $task) {
-                if (!isset($Tasks[key($task)])){
+                if (!isset($Tasks[key($task)])) {
                     continue;
                 }
-                if (array_search($Tasks[$arraySteps][0], $Tasks[key($task)]) === 0){
-                    $nextTaskKey = array_search($Tasks[$arraySteps][0], $Tasks);
-                    $NextTask = $Tasks[$nextTaskKey][0];
+                if ($Tasks[$arraySteps][0] === $task[1]) {
+                    continue 2;
                 }
+
+            }
+            if (!in_array($Tasks[$arraySteps][0],$AvailableNextTasks)){
+                $AvailableNextTasks[] = $Tasks[$arraySteps][0];
+            }
+
+
+        }
+        $NextTask = $AvailableNextTasks[0];
+        foreach ($AvailableNextTasks as $availableTask) {
+            if (strcmp($availableTask,$NextTask) < 0){
+                $NextTask = $availableTask;
             }
         }
         return $NextTask;
@@ -102,9 +111,9 @@ function findNextTask($Tasks){
 
 function testD7part01(){
     if (D7part01(filereader("testInput.txt")) === "CABDFE"){
-        echo "Testdata: OKAY\nStarting with the Dataset: ";
+        //echo "Testdata: OKAY\nStarting with the Dataset: ";
         if(D7part01(filereader("input.txt")) ==="AEMNPOJWISZCDFUKBXQTHVLGRY"){
-            echo "\nPart01: Correct!\n";
+            //echo "\nPart01: Correct!\n";
         }
         else{
             echo "\n";
@@ -117,4 +126,26 @@ function testD7part01(){
         echo "\n";
     }
 }
-testD7part01();
+
+
+
+
+
+$time_start = microtime(true);
+$time_end = microtime(true);
+$time = $time_end - $time_start;
+
+// Die Skriptverarbeitung fuer einen bestimmten Zeitraum unterbrechen
+$counter = 0;
+while ($time < 1.0){
+    testD7part01();
+    $counter += 1;
+    $time_end = microtime(true);
+    $time = $time_end - $time_start;
+}
+
+
+$time_end = microtime(true);
+$time = $time_end - $time_start;
+
+echo "In $time Sekunden die Funktion $counter Mal ausgeführt\n";
