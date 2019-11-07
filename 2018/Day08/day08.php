@@ -13,42 +13,51 @@
   * While the program reads the data in it should also delete the entries it already has used
   */
 
+function prepareInput($infile){
+    //Function that returns the contents of a file and stores it line by line in an array
+    $handle = fopen($infile, "r") or die ("Unable to open the requested File");
+    $array[] = fgets($handle);
+    fclose($handle);
+    preg_match_all("/\d+/",$array[0],$array);
+    return $array[0];
+}
+
 /**
  * Class Node
  */
 class Node{
-    private $ID;
-    private $IDParent;
     private $NumOfChildren;
     private $NumOfMetadata;
+    private $CurrentInput;
     private $Children = array();
     private $Metadata = array();
+    private $SumMetadata;
 
-    //#   - Functions -
+    public function __construct($Input)
+    {
+        $this->CurrentInput = $Input;
+        $this->NumOfChildren = array_shift($this->CurrentInput);
+        $this->NumOfMetadata = array_shift($this->CurrentInput);
 
-    function prepareInput($infile){
-        //Function that returns the contents of a file and stores it line by line in an array
-        $handle = fopen($infile, "r") or die ("Unable to open the requested File");
-        $array[] = fgets($handle);
-        fclose($handle);
-        return $array;
+
+        if ($this->NumOfChildren > 0){
+            for ($NumberOfChildren = 1; $NumberOfChildren <= $this->NumOfChildren; $NumberOfChildren++){
+                $this->Children[$NumberOfChildren] = new Node($this->CurrentInput);
+                $ChildMeta = $this->Children[$NumberOfChildren];
+                $ChildMeta = $ChildMeta->SumMetadata;
+                $this->SumMetadata += $ChildMeta;
+            }
+        }
+        if ($this->NumOfMetadata !== 0){
+            for ($eachMetaData = 0; $eachMetaData<$this->NumOfMetadata; $eachMetaData++){
+                $this->Metadata[] = array_shift($this->CurrentInput);
+            }
+            $this->SumMetadata += array_sum($this->Metadata);
+        }return $this->CurrentInput;
+
     }
-
-    function createChild($ID){
-        $ID = new Node();
-    }
-
-    function getChildrenAmount(){}
-
-    function getMetadataAmount(){}
-
-    function getMetadata(){}
-
-
-
 
 }
 
-$Test = new Node();
-
-print_r($Test->prepareInput("testInput.txt"));
+$Test = new Node(prepareInput("testInput.txt"));
+print_r($Test);
