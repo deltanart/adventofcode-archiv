@@ -28,36 +28,51 @@ function prepareInput($infile){
 class Node{
     private $NumOfChildren;
     private $NumOfMetadata;
-    private $CurrentInput;
     private $Children = array();
     private $Metadata = array();
     private $SumMetadata;
+    private $NodeValue;
 
-    public function __construct($Input)
+    public function __construct(&$Input)
     {
-        $this->CurrentInput = $Input;
-        $this->NumOfChildren = array_shift($this->CurrentInput);
-        $this->NumOfMetadata = array_shift($this->CurrentInput);
-
+        $this->NumOfChildren = array_shift($Input);
+        $this->NumOfMetadata = array_shift($Input);
 
         if ($this->NumOfChildren > 0){
-            for ($NumberOfChildren = 1; $NumberOfChildren <= $this->NumOfChildren; $NumberOfChildren++){
-                $this->Children[$NumberOfChildren] = new Node($this->CurrentInput);
-                $ChildMeta = $this->Children[$NumberOfChildren];
-                $ChildMeta = $ChildMeta->SumMetadata;
-                $this->SumMetadata += $ChildMeta;
+            for ($ChildNumber = 1; $ChildNumber <= $this->NumOfChildren; $ChildNumber++){
+                $this->Children[$ChildNumber] = new Node($Input);
+                $this->SumMetadata += $this->Children[$ChildNumber]->SumMetadata;//Saves the Sum of the Metadata from each Child
             }
         }
         if ($this->NumOfMetadata !== 0){
             for ($eachMetaData = 0; $eachMetaData<$this->NumOfMetadata; $eachMetaData++){
-                $this->Metadata[] = array_shift($this->CurrentInput);
+                $this->Metadata[] = array_shift($Input);
             }
             $this->SumMetadata += array_sum($this->Metadata);
-        }return $this->CurrentInput;
+        }
+        //Nodevalue
+        if (count($this->Children) == 0){
+            $this->NodeValue = $this->SumMetadata;
+        }else{
+            foreach ($this->Metadata as $MetaKey => $MetaEntry) {
+                if (isset($this->Children[$MetaEntry])){
+                    $this->NodeValue += $this->Children[$MetaEntry]->NodeValue;
+                }
+            }
+        }
+    }
 
+    public function part01(){
+        echo "Part 01: ".$this->SumMetadata."\n";
+    }
+
+    public function part02(){
+        echo "Part 02: ".$this->NodeValue."\n";
     }
 
 }
 
-$Test = new Node(prepareInput("testInput.txt"));
-print_r($Test);
+$Input = prepareInput("input.txt");
+$Test = new Node($Input);
+$Test->part01();
+$Test->part02();
