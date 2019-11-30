@@ -37,3 +37,5 @@ echo "\nSum: ".$result."<br><br>";
 $result = returnDoubleValues($frequencies);
 echo "\nFirst Sum that occurs a second time:".$result."\n";
 
+//exit();
+
