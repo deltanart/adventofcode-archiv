@@ -1,33 +1,24 @@
 <?php
+declare(strict_types=1);
 namespace AoC\Days;
-use AoC\FileReader;
+include __DIR__."/../AbstractDay.php";
+use AoC\AbstractDay;
 
-Class day01{
-
-    const INPUT_FILE = __DIR__."/input.txt";
-    protected $InputArray;
+Class day01 extends AbstractDay {
 
 
-    public function __construct()
+    public function __construct($inFile = __DIR__."/input.txt")
     {
-        $this->InputArray = FileReader::read(self::INPUT_FILE);
+        parent::__construct($inFile);
     }
 
-    function fuelPerModule($Mass){
-
-        $fuel = (floor((int) $Mass/3)) -2;
-        return $fuel;
+    protected function part1()
+    {
+        return array_sum($this->d1p1());
     }
 
-    public function d1p1(){
-        $fuelparts = array();
-        foreach ($this->InputArray as $Input){
-            $fuelparts[] = $this->fuelPerModule($Input);
-        }
-        return $fuelparts;
-    }
-
-    public function d1p2(){
+    protected function part2()
+    {
         $InputMassArray = $this->d1p1();
         $MassPerModule = [];
         foreach ($InputMassArray as $InputMass){
@@ -40,17 +31,25 @@ Class day01{
             $MassPerModule[] = array_sum($MassArray);
         }
         return array_sum($MassPerModule);
-
     }
 
-    public function run(){
-        echo "Day 1 Part 1/2:\n";
-        echo array_sum($this->d1p1());
-        echo "\n";
-        echo "Day 1 Part 2/2:\n";
-        echo $this->d1p2();
-        echo "\n";
+
+    function fuelPerModule($Mass){
+
+        $fuel = (floor((int) $Mass/3)) -2;
+        return $fuel;
     }
+
+    function d1p1(){
+        $fuelparts = array();
+        foreach ($this->InputArray as $Input){
+            $fuelparts[] = $this->fuelPerModule($Input);
+        }
+        return $fuelparts;
+    }
+
+
+
 }
 
 
