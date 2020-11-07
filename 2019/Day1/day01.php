@@ -1,47 +1,57 @@
-#!/usr/bin/php
 <?php
+namespace AoC\Days;
+use AoC\FileReader;
 
-function filereader($inputfile){
-    //Function that returns the contents of a file and stores it line by line in an array
-    $array = array();
-    $handle = fopen($inputfile, "r") or die ("Unable to open the requested File");
-    while ($line = fgets($handle)){
-        array_push($array, $line);
+Class day01{
+
+    const INPUT_FILE = __DIR__."/input.txt";
+    protected $InputArray;
+
+
+    public function __construct()
+    {
+        $this->InputArray = FileReader::read(self::INPUT_FILE);
     }
-    fclose($handle);
-    return $array;
-}
 
-function fuelPerModule($Mass){
-    return (floor($Mass/3) -2);
-}
+    function fuelPerModule($Mass){
 
-function d1p1($InputArray){
-    $fuelparts = array();
-    foreach ($InputArray as $Input){
-        $fuelparts[] = fuelPerModule($Input);
+        $fuel = (floor((int) $Mass/3)) -2;
+        return $fuel;
     }
-    return $fuelparts;
-}
 
-function d1p2($InputMassArray){
-    $MassPerModule = array();
-    foreach ($InputMassArray as $InputMass){
-        $Mass = $InputMass;
-        $MassArray = array($Mass);
-        while(fuelPerModule($Mass) > 0){
-            $Mass = fuelPerModule($Mass);
-            $MassArray[] = $Mass; 
+    public function d1p1(){
+        $fuelparts = array();
+        foreach ($this->InputArray as $Input){
+            $fuelparts[] = $this->fuelPerModule($Input);
         }
-        $MassPerModule[] = array_sum($MassArray);
+        return $fuelparts;
     }
-    return $MassPerModule;
-    
+
+    public function d1p2(){
+        $InputMassArray = $this->d1p1();
+        $MassPerModule = [];
+        foreach ($InputMassArray as $InputMass){
+            $Mass = $InputMass;
+            $MassArray = array($Mass);
+            while($this->fuelPerModule($Mass) > 0){
+                $Mass = $this->fuelPerModule($Mass);
+                $MassArray[] = $Mass;
+            }
+            $MassPerModule[] = array_sum($MassArray);
+        }
+        return array_sum($MassPerModule);
+
+    }
+
+    public function run(){
+        echo "Day 1 Part 1/2:\n";
+        echo array_sum($this->d1p1());
+        echo "\n";
+        echo "Day 1 Part 2/2:\n";
+        echo $this->d1p2();
+        echo "\n";
+    }
 }
-echo "Day 1 Part 1/2:\n";
 
-echo array_sum(d1p1(filereader("input.txt"))) . "\n\n";
 
-echo "Day 1 Part 2/2:\n";
 
-echo array_sum(d1p2(d1p1(filereader("input.txt")))) . "\n\n";
