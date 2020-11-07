@@ -5,7 +5,7 @@ include __DIR__."/../AbstractDay.php";
 use AoC\AbstractDay;
 
 Class day01 extends AbstractDay {
-
+    protected $dayNumber = 1;
 
     public function __construct($inFile = __DIR__."/input.txt")
     {

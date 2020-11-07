@@ -6,6 +6,7 @@ include_once __DIR__.'/../FileReader.php';
 
 abstract class AbstractDay
 {
+    protected $dayNumber = "N/A";
 
     public $InputArray;
 
@@ -20,10 +21,10 @@ abstract class AbstractDay
 
     public function run()
     {
-        echo "Day 1 Part 1/2:\n";
+        echo "Day $this->dayNumber Part 1/2:\n";
         echo $this->part1();
         echo "\n";
-        echo "Day 1 Part 2/2:\n";
+        echo "Day $this->dayNumber Part 2/2:\n";
         echo $this->part2();
         echo "\n";
     }
