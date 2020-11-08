@@ -34,7 +34,6 @@ class day02 extends AbstractDay
             $optCode = $this->InputArray[$optCodePosition];
 
             if ($optCode == 99) {
-
                 return $this->InputArray[0];
             }
 
@@ -50,12 +49,15 @@ class day02 extends AbstractDay
                 $this->InputArray[$resultPosition] = $firstInt + $secondInt;
             } elseif ($optCode == 2) {
                 $this->InputArray[$resultPosition] = $firstInt * $secondInt;
-            } else {
-                #return "Error! @$optCodePosition; Iteration: $iteration";
             }
+
             $optCodePosition += $step;
+            if ($optCodePosition >= count($this->InputArray)){
+                break;
+            }
 
         }
+        return false;
     }
 
     protected function part1()
@@ -65,21 +67,15 @@ class day02 extends AbstractDay
 
     protected function part2()
     {
-        $noun = 0;
-        $verb = 0;
-        for ($noun; $noun<100; $noun++){
-
-            for ($verb; $verb<100; $verb++){
+        for ($noun = 0; $noun<100; $noun++){
+            for ($verb = 0; $verb<100; $verb++){
                 $this->resetInput();
                 if ($this->prozessor($noun, $verb) == 19690720){
-                    echo $noun ."; " .$verb."; ";
                     return 100 * $noun + $verb;
-                }else{
-                    #echo $this->prozessor($noun, $verb). "; ";
                 }
             }
         }
-
+        return false;
     }
 
 
