@@ -22,6 +22,7 @@ class FileReader
     }
 
     static function readCSV($infile){
-        return array_map('str_getcsv', file($infile));
+        $csv = array_map('str_getcsv', file($infile));
+        return $csv;
     }
 }
