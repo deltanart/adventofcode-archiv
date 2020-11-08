@@ -3,13 +3,14 @@ declare(strict_types=1);
 namespace AoC\Days;
 include __DIR__."/../AbstractDay.php";
 use AoC\AbstractDay;
+use AoC\FileReader;
 
 Class day01 extends AbstractDay {
     protected $dayNumber = 1;
 
     public function __construct($inFile = __DIR__."/input.txt")
     {
-        parent::__construct($inFile);
+        $this->InputArray = FileReader::read($inFile);
     }
 
     protected function part1()

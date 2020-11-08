@@ -20,4 +20,8 @@ class FileReader
         fclose($handle);
         return $array;
     }
+
+    static function readCSV($infile){
+        return array_map('str_getcsv', file($infile));
+    }
 }

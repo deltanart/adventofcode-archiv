@@ -10,10 +10,7 @@ abstract class AbstractDay
 
     public $InputArray;
 
-    public function __construct($inFile)
-    {
-        $this->InputArray = FileReader::read($inFile);
-    }
+    abstract public function __construct($inFile);
 
 
     abstract protected function part1();
