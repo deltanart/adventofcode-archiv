@@ -13,18 +13,23 @@ class day02 extends AbstractDay
 
     public function __construct($inFile = __DIR__."/testInput.txt")
     {
+        $this->resetInput($inFile);
+    }
+
+    function resetInput($inFile = __DIR__."/testInput.txt"){
         $this->InputArray = FileReader::readCSV($inFile);
         $this->InputArray = $this->InputArray[0];
     }
 
-    protected function part1()
-    {
-        $this->InputArray[1] = 12;
-        $this->InputArray[2] = 2;
+    function prozessor($noun, $verb){
+        $this->InputArray[1] = $noun;
+        $this->InputArray[2] = $verb;
 
         $step = 4;
         $optCodePosition = 0;
+        $iteration = 0;
         while (true) {
+            $iteration +=1;
 
             $optCode = $this->InputArray[$optCodePosition];
 
@@ -34,10 +39,11 @@ class day02 extends AbstractDay
             }
 
             $firstIntPosition = $this->InputArray[$optCodePosition + 1];
-            $firstInt = $this->InputArray[$firstIntPosition];
             $secondIntPosition = $this->InputArray[$optCodePosition + 2];
-            $secondInt = $this->InputArray[$secondIntPosition];
             $resultPosition = $this->InputArray[$optCodePosition + 3];
+
+            $secondInt = $this->InputArray[$secondIntPosition];
+            $firstInt = $this->InputArray[$firstIntPosition];
 
             if ($optCode == 1) {
 
@@ -45,15 +51,36 @@ class day02 extends AbstractDay
             } elseif ($optCode == 2) {
                 $this->InputArray[$resultPosition] = $firstInt * $secondInt;
             } else {
-                return "Error!";
+                #return "Error! @$optCodePosition; Iteration: $iteration";
             }
             $optCodePosition += $step;
-        }
 
+        }
+    }
+
+    protected function part1()
+    {
+       return $this->prozessor(12,2);
     }
 
     protected function part2()
     {
-        // TODO: Implement part2() method.
+        $noun = 0;
+        $verb = 0;
+        for ($noun; $noun<100; $noun++){
+
+            for ($verb; $verb<100; $verb++){
+                $this->resetInput();
+                if ($this->prozessor($noun, $verb) == 19690720){
+                    echo $noun ."; " .$verb."; ";
+                    return 100 * $noun + $verb;
+                }else{
+                    #echo $this->prozessor($noun, $verb). "; ";
+                }
+            }
+        }
+
     }
+
+
 }
