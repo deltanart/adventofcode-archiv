@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace AoC\Days;
-include __DIR__."/../AbstractDay.php";
+include __DIR__ . "/../../AbstractDay.php";
 use AoC\AbstractDay;
 use AoC\FileReader;
 

@@ -1,2 +1,2 @@
-# AdventofCode
-A collection of various mini projects from the "Advent of Code" website
+# Advent of Code
+A collection of various mini projects from [Advent of Code](https://adventofcode.com/) 

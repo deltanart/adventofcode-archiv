@@ -2,7 +2,7 @@
 
 
 namespace AoC;
-include_once __DIR__.'/../FileReader.php';
+include_once __DIR__ . '/../FileReader.php';
 
 abstract class AbstractDay
 {
